@@ -1,3 +1,4 @@
+
 const gameArea = document.getElementById("gameArea");
 const cake = document.getElementById("cake");
 const spoon = document.getElementById("spoon");
@@ -9,9 +10,10 @@ const partyMessage = document.getElementById("partyMessage");
 const SIZE = 55;
 const RADIUS = SIZE / 2;
 
-const CAKE_SPEED = 190;
-const SPOON_REACTION_DISTANCE = 175;
-const SAFE_MARGIN = 48;
+const SPEED = 230;
+const TURN_RATE = 3.5;
+const WALL_BUFFER = 100;
+const SPOON_DANGER = 190;
 
 let width = 0;
 let height = 0;
@@ -19,46 +21,37 @@ let height = 0;
 let cakeX = 100;
 let cakeY = 100;
 
-let spoonX = 0;
-let spoonY = 0;
+let spoonX = 300;
+let spoonY = 200;
 
-let targetX = 200;
-let targetY = 150;
+let directionX = 1;
+let directionY = 0;
 
 let lastTime = 0;
 let animationStarted = false;
 let partyClicked = false;
-
 let statusTimer = 0;
 
 const messages = [
-    "You almost got it. Almost.",
-    "Nope. Not today.",
-    "The cake has trust issues.",
-    "Try harder, human.",
-    "It knows your intentions.",
-    "Kozel's cake is fighting back.",
+    "Not today, Kozel.",
+    "You thought you could catch me?",
     "This cake has places to be.",
-    "Nice try. Anyway..."
+    "Too slow!",
+    "I am literally running for my life.",
+    "Nice try. Keep chasing.",
+    "Catch me if you can.",
+    "The cake refuses to cooperate."
 ];
-
-function random(min, max) {
-    return Math.random() * (max - min) + min;
-}
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
 }
 
-function distance(x1, y1, x2, y2) {
-    return Math.hypot(x2 - x1, y2 - y1);
-}
-
 function normalize(x, y) {
     const length = Math.hypot(x, y);
 
-    if (length === 0) {
-        return { x: 0, y: 0 };
+    if (length < 0.0001) {
+        return { x: 1, y: 0 };
     }
 
     return {
@@ -67,46 +60,8 @@ function normalize(x, y) {
     };
 }
 
-function getSafeBounds() {
-    return {
-        left: Math.min(SAFE_MARGIN, width / 4),
-        right: Math.max(width - SAFE_MARGIN, width * 0.75),
-        top: Math.min(SAFE_MARGIN, height / 4),
-        bottom: Math.max(height - SAFE_MARGIN, height * 0.75)
-    };
-}
-
-function chooseNewTarget() {
-    const bounds = getSafeBounds();
-
-    let newX;
-    let newY;
-
-    for (let attempt = 0; attempt < 25; attempt++) {
-        newX = random(bounds.left, bounds.right);
-        newY = random(bounds.top, bounds.bottom);
-
-        const farEnoughFromCake =
-            distance(newX, newY, cakeX, cakeY) > 110;
-
-        const awayFromSpoon =
-            distance(newX, newY, spoonX, spoonY) > 100;
-
-        if (farEnoughFromCake && awayFromSpoon) {
-            break;
-        }
-    }
-
-    targetX = newX;
-    targetY = newY;
-}
-
-function updatePositions() {
-    cake.style.left = `${cakeX - RADIUS}px`;
-    cake.style.top = `${cakeY - RADIUS}px`;
-
-    spoon.style.left = `${spoonX - RADIUS}px`;
-    spoon.style.top = `${spoonY - RADIUS}px`;
+function distance(x1, y1, x2, y2) {
+    return Math.hypot(x2 - x1, y2 - y1);
 }
 
 function setupGame() {
@@ -115,16 +70,21 @@ function setupGame() {
     width = rect.width;
     height = rect.height;
 
-    const bounds = getSafeBounds();
-
-    cakeX = clamp(width * 0.25, bounds.left, bounds.right);
-    cakeY = clamp(height * 0.5, bounds.top, bounds.bottom);
+    cakeX = clamp(width * 0.25, RADIUS, width - RADIUS);
+    cakeY = clamp(height * 0.5, RADIUS, height - RADIUS);
 
     spoonX = width * 0.75;
     spoonY = height * 0.5;
 
-    chooseNewTarget();
     updatePositions();
+}
+
+function updatePositions() {
+    cake.style.left = `${cakeX - RADIUS}px`;
+    cake.style.top = `${cakeY - RADIUS}px`;
+
+    spoon.style.left = `${spoonX - RADIUS}px`;
+    spoon.style.top = `${spoonY - RADIUS}px`;
 }
 
 function moveSpoon(event) {
@@ -142,92 +102,88 @@ function moveSpoon(event) {
         height - RADIUS
     );
 
-    spoon.style.left = `${spoonX - RADIUS}px`;
-    spoon.style.top = `${spoonY - RADIUS}px`;
+    updatePositions();
 }
 
-function moveCake(deltaTime) {
-    const bounds = getSafeBounds();
+function getDesiredDirection() {
+    // The cake's normal wandering direction.
+    let x = directionX * 0.55 + Math.cos(Date.now() / 1100) * 0.35;
+    let y = directionY * 0.55 + Math.sin(Date.now() / 1300) * 0.35;
 
-    const targetDistance = distance(
-        cakeX,
-        cakeY,
-        targetX,
-        targetY
-    );
-
-    if (targetDistance < 35) {
-        chooseNewTarget();
-    }
-
-    // Direction towards the current waypoint.
-    const towardTarget = normalize(
-        targetX - cakeX,
-        targetY - cakeY
-    );
-
-    let directionX = towardTarget.x;
-    let directionY = towardTarget.y;
-
-    // If the spoon gets close, the cake tries to escape it.
+    // Escape from the spoon.
     const spoonDistance = distance(
-        cakeX,
-        cakeY,
-        spoonX,
-        spoonY
+        cakeX, cakeY, spoonX, spoonY
     );
 
-    if (spoonDistance < SPOON_REACTION_DISTANCE) {
-        const awayFromSpoon = normalize(
+    if (spoonDistance < SPOON_DANGER) {
+        const escape = normalize(
             cakeX - spoonX,
             cakeY - spoonY
         );
 
-        const danger = 1 - spoonDistance / SPOON_REACTION_DISTANCE;
+        const strength = 1.5 + (1 - spoonDistance / SPOON_DANGER) * 2.5;
 
-        const escapeStrength = 1.2 + danger * 2;
-
-        directionX += awayFromSpoon.x * escapeStrength;
-        directionY += awayFromSpoon.y * escapeStrength;
+        x += escape.x * strength;
+        y += escape.y * strength;
     }
 
-    // Gently guide the cake away from the edges.
-    const edgePush = 1.8;
-
-    if (cakeX < bounds.left + 55) {
-        directionX += edgePush;
+    // Smoothly turn away from all four boundaries.
+    if (cakeX < WALL_BUFFER) {
+        x += (WALL_BUFFER - cakeX) / WALL_BUFFER * 2.5;
     }
 
-    if (cakeX > bounds.right - 55) {
-        directionX -= edgePush;
+    if (cakeX > width - WALL_BUFFER) {
+        x -= (cakeX - (width - WALL_BUFFER)) / WALL_BUFFER * 2.5;
     }
 
-    if (cakeY < bounds.top + 55) {
-        directionY += edgePush;
+    if (cakeY < WALL_BUFFER) {
+        y += (WALL_BUFFER - cakeY) / WALL_BUFFER * 2.5;
     }
 
-    if (cakeY > bounds.bottom - 55) {
-        directionY -= edgePush;
+    if (cakeY > height - WALL_BUFFER) {
+        y -= (cakeY - (height - WALL_BUFFER)) / WALL_BUFFER * 2.5;
     }
 
-    const finalDirection = normalize(directionX, directionY);
+    return normalize(x, y);
+}
 
-    cakeX += finalDirection.x * CAKE_SPEED * deltaTime;
-    cakeY += finalDirection.y * CAKE_SPEED * deltaTime;
+function moveCake(deltaTime) {
+    const desired = getDesiredDirection();
 
-    // Keep the cake safely inside the play area.
-    cakeX = clamp(cakeX, bounds.left, bounds.right);
-    cakeY = clamp(cakeY, bounds.top, bounds.bottom);
+    // Smoothly rotate towards the desired direction.
+    const blend = Math.min(1, TURN_RATE * deltaTime);
 
-    // If it reaches an edge, give it a new destination.
-    const nearEdge =
-        cakeX <= bounds.left + 8 ||
-        cakeX >= bounds.right - 8 ||
-        cakeY <= bounds.top + 8 ||
-        cakeY >= bounds.bottom - 8;
+    directionX += (desired.x - directionX) * blend;
+    directionY += (desired.y - directionY) * blend;
 
-    if (nearEdge) {
-        chooseNewTarget();
+    const direction = normalize(directionX, directionY);
+
+    directionX = direction.x;
+    directionY = direction.y;
+
+    cakeX += directionX * SPEED * deltaTime;
+    cakeY += directionY * SPEED * deltaTime;
+
+    // Emergency correction only. The steering should turn it
+    // around before it reaches these limits.
+    if (cakeX < RADIUS) {
+        cakeX = RADIUS;
+        directionX = Math.abs(directionX);
+    }
+
+    if (cakeX > width - RADIUS) {
+        cakeX = width - RADIUS;
+        directionX = -Math.abs(directionX);
+    }
+
+    if (cakeY < RADIUS) {
+        cakeY = RADIUS;
+        directionY = Math.abs(directionY);
+    }
+
+    if (cakeY > height - RADIUS) {
+        cakeY = height - RADIUS;
+        directionY = -Math.abs(directionY);
     }
 
     updatePositions();
@@ -237,23 +193,18 @@ function updateStatus(deltaTime) {
     statusTimer -= deltaTime;
 
     if (statusTimer <= 0) {
-        const message = messages[
-            Math.floor(Math.random() * messages.length)
-        ];
+        gameStatus.textContent =
+            messages[Math.floor(Math.random() * messages.length)];
 
-        gameStatus.textContent = message;
-        statusTimer = random(3, 5);
+        statusTimer = 4;
     }
 }
 
 function gameLoop(timestamp) {
     if (!animationStarted) return;
 
-    if (!lastTime) {
-        lastTime = timestamp;
-    }
+    if (!lastTime) lastTime = timestamp;
 
-    // Cap the time step so the cake doesn't jump after a lag spike.
     const deltaTime = Math.min(
         (timestamp - lastTime) / 1000,
         0.03
@@ -271,12 +222,9 @@ function startGame() {
     if (animationStarted) return;
 
     animationStarted = true;
-    lastTime = 0;
-
     requestAnimationFrame(gameLoop);
 }
 
-// Confetti for the birthday button.
 function celebrate() {
     if (partyClicked) return;
 
@@ -284,7 +232,7 @@ function celebrate() {
 
     partyMessage.classList.add("show");
     partyMessage.textContent =
-        "HAPPY BIRTHDAY, KOZEL! Now stop chasing the cake and enjoy your day.";
+        "HAPPY BIRTHDAY, KOZEL! Now enjoy your day. You earned it.";
 
     partyButton.textContent = "BIRTHDAY CELEBRATION ACTIVATED";
 
@@ -299,28 +247,22 @@ function celebrate() {
         piece.style.position = "fixed";
         piece.style.left = `${Math.random() * 100}vw`;
         piece.style.top = "-35px";
-        piece.style.fontSize = `${random(16, 28)}px`;
+        piece.style.fontSize = `${16 + Math.random() * 12}px`;
         piece.style.pointerEvents = "none";
         piece.style.zIndex = "9999";
 
         document.body.appendChild(piece);
 
-        const duration = random(2, 4);
-        const drift = random(-100, 100);
-
         const animation = piece.animate(
             [
+                { transform: "translateY(0) rotate(0deg)", opacity: 1 },
                 {
-                    transform: "translate(0, 0) rotate(0deg)",
-                    opacity: 1
-                },
-                {
-                    transform: `translate(${drift}px, 110vh) rotate(${random(180, 700)}deg)`,
-                    opacity: 0.8
+                    transform: `translate(${Math.random() * 180 - 90}px, 110vh) rotate(500deg)`,
+                    opacity: 0.7
                 }
             ],
             {
-                duration: duration * 1000,
+                duration: 2500 + Math.random() * 1500,
                 easing: "ease-in",
                 fill: "forwards"
             }
@@ -330,16 +272,12 @@ function celebrate() {
     }
 }
 
-// Events.
 gameArea.addEventListener("pointermove", moveSpoon);
 gameArea.addEventListener("pointerdown", moveSpoon);
 
 partyButton.addEventListener("click", celebrate);
 
-window.addEventListener("resize", () => {
-    setupGame();
-});
+window.addEventListener("resize", setupGame);
 
-// Start everything.
 setupGame();
 startGame();
