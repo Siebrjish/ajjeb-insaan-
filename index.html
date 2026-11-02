@@ -4,12 +4,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171815">
 <title>For Kozel :)</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=Patrick+Hand&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -17,16 +20,16 @@ body {
   background: #171815;
   color: #eeeade;
   font-family: 'Space Grotesk', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 30px 16px;
+  padding: 35px 16px 50px;
   overflow-x: hidden;
 }
 
 .background-text {
   position: fixed;
-  font-size: 15vw;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 17vw;
   font-weight: 700;
   color: #ffffff05;
   white-space: nowrap;
@@ -36,16 +39,18 @@ body {
 
 .wrapper {
   width: 100%;
-  max-width: 520px;
+  max-width: 540px;
+  margin: auto;
 }
 
 .topline {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   font: 10px 'DM Mono', monospace;
   color: #8d8e80;
-  letter-spacing: 2px;
-  margin-bottom: 22px;
+  letter-spacing: 1.5px;
+  margin-bottom: 24px;
 }
 
 .card {
@@ -77,6 +82,7 @@ body {
 .card-top {
   display: flex;
   justify-content: space-between;
+  align-items: start;
   font: 10px 'DM Mono', monospace;
   color: #77776a;
   letter-spacing: 1px;
@@ -118,7 +124,7 @@ h1 span {
 
 .signature {
   text-align: right;
-  font: 19px 'Patrick Hand', cursive;
+  font: 22px 'Patrick Hand', cursive;
   margin-top: 28px;
   color: #778c3e;
 }
@@ -126,7 +132,7 @@ h1 span {
 .bottom {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  gap: 8px;
   margin-top: 35px;
   border-top: 1px solid #c7c1af;
   padding-top: 18px;
@@ -134,42 +140,143 @@ h1 span {
   color: #888778;
 }
 
-.open-button {
-  width: 100%;
-  margin-top: 30px;
-  padding: 17px;
+.cake-game {
+  margin-top: 55px;
+  padding: 24px 20px;
+  border: 1px solid #ffffff30;
+  background: #20211c;
+}
+
+.game-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font: 9px 'DM Mono', monospace;
+  color: #a4a48f;
+  letter-spacing: 1px;
+}
+
+.game-heading span:last-child {
+  color: #c7f36b;
+}
+
+.cake-game h2 {
+  font-size: 30px;
+  margin: 25px 0 5px;
+}
+
+.cake-game p {
+  font-size: 13px;
+  color: #aaa99d;
+  line-height: 1.6;
+}
+
+#playground {
+  height: 250px;
+  margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, #ffffff0a 1px, transparent 2px),
+    #303128;
+  background-size: 24px 24px;
+  border: 1px dashed #77786b;
+  border-radius: 3px;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+#cake, #spoon {
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+#cake {
+  left: 75%;
+  top: 45%;
+  font-size: 40px;
+  z-index: 1;
+}
+
+#spoon {
+  left: 20%;
+  top: 70%;
+  font-size: 32px;
+  z-index: 2;
+}
+
+.game-tip {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  color: #a4a48f;
+  font: 9px 'DM Mono', monospace;
+  pointer-events: none;
+}
+
+.game-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-top: 17px;
+  font: 10px 'DM Mono', monospace;
+  color: #a4a48f;
+}
+
+.game-bottom button {
+  margin: 0;
+  padding: 9px 12px;
   background: transparent;
   border: 1px solid #77786b;
-  color: #eeeade;
-  font: 12px 'DM Mono', monospace;
-  letter-spacing: 1px;
+  color: #c7f36b;
+  font: 10px 'DM Mono', monospace;
+  cursor: pointer;
+}
+
+.game-bottom button:hover {
+  background: #c7f36b;
+  color: #171815;
+}
+
+.party-section {
+  text-align: center;
+  margin-top: 55px;
+}
+
+.party-section p {
+  color: #aaa99d;
+  font-size: 13px;
+}
+
+.party-button {
+  background: #c7f36b;
+  color: #171815;
+  border: none;
+  padding: 15px 22px;
+  font: 600 12px 'Space Grotesk', sans-serif;
   cursor: pointer;
   transition: .2s;
 }
 
-.open-button:hover {
-  background: #c7f36b;
-  border-color: #c7f36b;
-  color: #171815;
+.party-button:hover {
+  transform: translateY(-3px);
+  background: white;
 }
 
-.hidden-message {
+#party-message {
   display: none;
   color: #c7f36b;
-  text-align: center;
-  font: 19px 'Patrick Hand', cursive;
-  margin-top: 24px;
-  animation: appear .5s ease;
-}
-
-@keyframes appear {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  font: 22px 'Patrick Hand', cursive;
+  margin-top: 22px;
+  line-height: 1.5;
 }
 
 footer {
   text-align: center;
-  margin-top: 28px;
+  margin-top: 45px;
   color: #77786b;
   font: 9px 'DM Mono', monospace;
   letter-spacing: 2px;
@@ -193,8 +300,28 @@ footer {
 }
 
 @media(max-width: 420px) {
-  .card { padding: 30px 23px; }
-  .message { font-size: 19px; }
+  .card {
+    padding: 30px 23px;
+  }
+
+  .message {
+    font-size: 19px;
+  }
+
+  .cake-game {
+    padding: 20px 14px;
+  }
+
+  .game-bottom {
+    font-size: 9px;
+  }
+}
+
+@media(prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
 }
 </style>
 </head>
@@ -204,22 +331,29 @@ footer {
 <div class="background-text">HAPPY BIRTHDAY</div>
 
 <div class="wrapper">
+
   <div class="topline">
     <span>AN INTERNET DELIVERY</span>
     <span>03 NOVEMBER</span>
   </div>
 
+  <!-- BIRTHDAY CARD -->
   <article class="card">
+
     <div class="tape"></div>
 
     <div class="card-top">
       <span>TO: KOZEL</span>
-      <div class="stamp">SPECIAL<br>DELIVERY<br>★ 001</div>
+      <div class="stamp">
+        SPECIAL<br>DELIVERY<br>★ 001
+      </div>
     </div>
 
     <h1>Happy birthday,<br><span>Kozel.</span></h1>
 
-    <div class="subtitle">gande insaan, finally your day.</div>
+    <div class="subtitle">
+      gande insaan, finally your day.
+    </div>
 
     <div class="message">Gande insaan, naam to na bataya hai abhi tak, to Kozel hi theek. Hmm.
 
@@ -233,45 +367,246 @@ And happy birthday one final time!
 
 Party de dena hehe.</div>
 
-    <div class="signature">— your internet acquaintance :)</div>
+    <div class="signature">— shivam</div>
 
     <div class="bottom">
       <span>MADE WITH QUESTIONABLE INTENTIONS</span>
       <span>✳ 03 / 11</span>
     </div>
+
   </article>
 
-  <button class="open-button" onclick="party()">
-    ONE MORE THING... CLICK HERE ↗
-  </button>
+  <!-- CAKE GAME -->
+  <section class="cake-game">
 
-  <div class="hidden-message" id="surprise">
-    Bas ab party ki date bata dena.<br>
-    Birthday tumhara hai, treat humari banti hai kya? :)
-  </div>
+    <div class="game-heading">
+      <span>UNNECESSARY BIRTHDAY GAME / 001</span>
+      <span>IMPOSSIBLE MODE</span>
+    </div>
 
-  <footer>END OF TRANSMISSION · HAVE A GOOD ONE</footer>
+    <h2>Catch the cake.</h2>
+
+    <p>
+      Move your spoon around and try to catch it.
+      The cake has other plans.
+    </p>
+
+    <div id="playground">
+      <div id="cake">🎂</div>
+      <div id="spoon">🥄</div>
+      <div class="game-tip">MOVE YOUR POINTER / FINGER TO PLAY</div>
+    </div>
+
+    <div class="game-bottom">
+      <span id="game-status">
+        The cake is suspiciously confident.
+      </span>
+
+      <button onclick="resetGame()">TRY AGAIN ↻</button>
+    </div>
+
+  </section>
+
+  <!-- PARTY BUTTON -->
+  <section class="party-section">
+
+    <p>Okay, enough chasing cake.</p>
+
+    <button class="party-button" onclick="party()">
+      CLICK FOR YOUR FINAL BIRTHDAY SURPRISE ↗
+    </button>
+
+    <div id="party-message">
+      HAPPY BIRTHDAY, KOZEL!<br>
+      Ab party ki date bata dena.<br>
+      Birthday tumhara hai, treat humari banti hai kya? :)
+    </div>
+
+  </section>
+
+  <footer>
+    END OF TRANSMISSION · HAVE A GOOD ONE
+  </footer>
+
 </div>
 
 <script>
-function party() {
-  const surprise = document.getElementById('surprise');
-  surprise.style.display = 'block';
 
-  document.querySelector('.open-button').textContent =
+// -------------------------------
+// CAKE CHASE GAME
+// -------------------------------
+
+const playground = document.getElementById('playground');
+const cake = document.getElementById('cake');
+const spoon = document.getElementById('spoon');
+const statusText = document.getElementById('game-status');
+
+let spoonX = 70;
+let spoonY = 150;
+
+let targetX = 70;
+let targetY = 150;
+
+let cakeX = 300;
+let cakeY = 100;
+
+let cakeVX = 1.5;
+let cakeVY = 1.2;
+
+let attempts = 0;
+let lastTaunt = 0;
+
+function moveSpoon(event) {
+  const rect = playground.getBoundingClientRect();
+
+  targetX = event.clientX - rect.left;
+  targetY = event.clientY - rect.top;
+}
+
+playground.addEventListener('pointermove', moveSpoon);
+
+playground.addEventListener('pointerdown', event => {
+  moveSpoon(event);
+
+  attempts++;
+
+  if (attempts < 4) {
+    statusText.textContent = "Nice try. The cake disagrees.";
+  } else if (attempts < 9) {
+    statusText.textContent = "Bro, it's literally running away.";
+  } else {
+    statusText.textContent = "Kozel vs cake: cake is winning.";
+  }
+});
+
+function resetGame() {
+  const width = playground.clientWidth;
+  const height = playground.clientHeight;
+
+  spoonX = 50;
+  spoonY = height - 45;
+
+  targetX = spoonX;
+  targetY = spoonY;
+
+  cakeX = width - 50;
+  cakeY = 60;
+
+  cakeVX = 1.5;
+  cakeVY = 1.2;
+
+  attempts = 0;
+
+  statusText.textContent =
+    "The cake is suspiciously confident.";
+}
+
+function animateGame() {
+
+  const width = playground.clientWidth;
+  const height = playground.clientHeight;
+
+  // Spoon follows the pointer.
+  const dx = targetX - spoonX;
+  const dy = targetY - spoonY;
+
+  const distance = Math.hypot(dx, dy);
+
+  if (distance > 1) {
+    const speed = Math.min(3.5, distance);
+
+    spoonX += (dx / distance) * speed;
+    spoonY += (dy / distance) * speed;
+  }
+
+  // Cake escapes from the spoon.
+  const awayX = cakeX - spoonX;
+  const awayY = cakeY - spoonY;
+
+  const awayDistance = Math.hypot(awayX, awayY) || 1;
+
+  const escapeSpeed = 4.2;
+
+  cakeVX = (awayX / awayDistance) * escapeSpeed;
+  cakeVY = (awayY / awayDistance) * escapeSpeed;
+
+  cakeX += cakeVX;
+  cakeY += cakeVY;
+
+  // Bounce off the playground walls.
+  if (cakeX < 22 || cakeX > width - 22) {
+    cakeX = Math.max(22, Math.min(width - 22, cakeX));
+  }
+
+  if (cakeY < 22 || cakeY > height - 22) {
+    cakeY = Math.max(22, Math.min(height - 22, cakeY));
+  }
+
+  // Keep the spoon inside the playground.
+  spoonX = Math.max(16, Math.min(width - 16, spoonX));
+  spoonY = Math.max(16, Math.min(height - 16, spoonY));
+
+  spoon.style.left = spoonX + 'px';
+  spoon.style.top = spoonY + 'px';
+
+  cake.style.left = cakeX + 'px';
+  cake.style.top = cakeY + 'px';
+
+  // Occasional cake taunts.
+  if (attempts >= 5 && Date.now() - lastTaunt > 5000) {
+    statusText.textContent = "The cake says: skill issue.";
+    lastTaunt = Date.now();
+  }
+
+  requestAnimationFrame(animateGame);
+}
+
+// -------------------------------
+// PARTY SURPRISE
+// -------------------------------
+
+function party() {
+
+  const message = document.getElementById('party-message');
+
+  message.style.display = 'block';
+
+  document.querySelector('.party-button').textContent =
     'HAPPY BIRTHDAY KOZEL ✓';
 
-  for (let i = 0; i < 65; i++) {
+  // Confetti celebration.
+  for (let i = 0; i < 90; i++) {
+
     const piece = document.createElement('div');
+
     piece.className = 'confetti';
+
     piece.style.left = Math.random() * 100 + 'vw';
-    piece.style.background = ['#c7f36b','#e9e4d5','#b8a4e8','#e6a36a'][Math.floor(Math.random()*4)];
-    piece.style.animationDelay = Math.random() * 1.5 + 's';
-    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+
+    piece.style.background = [
+      '#c7f36b',
+      '#e9e4d5',
+      '#b8a4e8',
+      '#e6a36a'
+    ][Math.floor(Math.random() * 4)];
+
+    piece.style.animationDelay =
+      Math.random() * 1.5 + 's';
+
+    piece.style.animationDuration =
+      (2 + Math.random() * 2) + 's';
+
     document.body.appendChild(piece);
+
     setTimeout(() => piece.remove(), 4500);
   }
+
 }
+
+// Start everything.
+resetGame();
+animateGame();
+
 </script>
 
 </body>
