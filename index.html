@@ -4,266 +4,275 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>hey, kozel.</title>
+<title>For Kozel :)</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
-:root {
-  --bg: #11120f;
-  --paper: #e9e6dc;
-  --muted: #99998d;
-  --lime: #c7f36b;
-}
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=Patrick+Hand&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--paper);
-  font-family: 'Space Grotesk', sans-serif;
   min-height: 100vh;
+  background: #171815;
+  color: #eeeade;
+  font-family: 'Space Grotesk', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 16px;
   overflow-x: hidden;
 }
 
-.grain {
+.background-text {
   position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .07;
-  z-index: 5;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 24px 7%;
-  border-bottom: 1px solid #ffffff17;
-  font: 11px 'DM Mono', monospace;
-  color: var(--muted);
-  letter-spacing: 1px;
-}
-
-nav span:last-child { color: var(--lime); }
-
-main {
-  width: min(900px, 86%);
-  margin: 90px auto 60px;
-}
-
-.date {
-  font: 12px 'DM Mono', monospace;
-  color: var(--lime);
-  letter-spacing: 2px;
-}
-
-h1 {
-  font-size: clamp(65px, 13vw, 140px);
-  line-height: .85;
-  letter-spacing: -9px;
-  margin: 28px 0;
+  font-size: 15vw;
   font-weight: 700;
+  color: #ffffff05;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: -1;
 }
 
-h1 span {
-  color: var(--lime);
-  display: block;
-  padding-left: 12%;
-}
-
-.intro {
-  max-width: 440px;
-  margin: 35px 0 60px 12%;
-  color: #b5b4a9;
-  font-size: 16px;
-  line-height: 1.8;
-}
-
-.intro strong { color: var(--paper); }
-
-.divider {
-  border: 0;
-  border-top: 1px solid #ffffff25;
-  margin: 55px 0;
-}
-
-.note {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 30px;
-  align-items: start;
-}
-
-.label {
-  color: var(--lime);
-  font: 11px 'DM Mono', monospace;
-  letter-spacing: 1px;
-}
-
-.note p {
-  margin: 0;
-  font-size: clamp(18px, 3vw, 25px);
-  line-height: 1.5;
+.wrapper {
+  width: 100%;
   max-width: 520px;
 }
 
-.note p small {
-  display: block;
-  margin-top: 18px;
-  font: 12px 'DM Mono', monospace;
-  color: var(--muted);
-}
-
-.interaction {
-  margin: 80px 0;
-  padding: 30px;
-  border: 1px solid #ffffff2b;
-  position: relative;
-}
-
-.interaction::before {
-  content: "IMPORTANT BUSINESS";
-  position: absolute;
-  top: -8px;
-  left: 20px;
-  background: var(--bg);
-  padding: 0 10px;
-  color: var(--lime);
-  font: 10px 'DM Mono', monospace;
-}
-
-.interaction h2 {
-  font-size: 28px;
-  margin: 0 0 10px;
-}
-
-.interaction p {
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-button {
-  background: var(--lime);
-  color: #15170f;
-  border: 0;
-  padding: 14px 20px;
-  font: 600 14px 'Space Grotesk', sans-serif;
-  cursor: pointer;
-  margin-top: 12px;
-  transition: transform .2s, background .2s;
-}
-
-button:hover {
-  transform: translate(-3px, -3px);
-  background: white;
-}
-
-#surprise {
-  display: none;
-  margin-top: 24px;
-  font-size: 21px;
-  line-height: 1.5;
-  color: var(--lime);
-}
-
-footer {
-  padding: 25px 7%;
-  border-top: 1px solid #ffffff17;
+.topline {
   display: flex;
   justify-content: space-between;
-  color: var(--muted);
   font: 10px 'DM Mono', monospace;
+  color: #8d8e80;
+  letter-spacing: 2px;
+  margin-bottom: 22px;
+}
+
+.card {
+  position: relative;
+  background: #e9e4d5;
+  color: #26271f;
+  padding: 38px 32px;
+  border-radius: 3px;
+  box-shadow: 10px 12px 0 #00000055;
+  transform: rotate(-1deg);
+  transition: transform .3s;
+}
+
+.card:hover {
+  transform: rotate(0deg);
+}
+
+.tape {
+  position: absolute;
+  top: -12px;
+  left: 42%;
+  width: 85px;
+  height: 25px;
+  background: #c8d68b;
+  opacity: .8;
+  transform: rotate(3deg);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  font: 10px 'DM Mono', monospace;
+  color: #77776a;
   letter-spacing: 1px;
 }
 
-@media(max-width:600px) {
-  main { margin-top: 65px; }
-  h1 { letter-spacing: -5px; }
-  .intro { margin-left: 0; }
-  .note { grid-template-columns: 1fr; gap: 15px; }
-  .interaction { padding: 24px 18px; }
-  footer { gap: 15px; flex-wrap: wrap; }
+.stamp {
+  border: 1px solid #77776a;
+  padding: 8px;
+  transform: rotate(7deg);
+  font-size: 9px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: clamp(39px, 9vw, 58px);
+  line-height: 1;
+  letter-spacing: -3px;
+  margin: 42px 0 10px;
+}
+
+h1 span {
+  color: #778c3e;
+}
+
+.subtitle {
+  font: 17px 'Patrick Hand', cursive;
+  color: #77776a;
+  margin-bottom: 30px;
+}
+
+.message {
+  font: 21px/1.65 'Patrick Hand', cursive;
+  color: #34352d;
+  border-top: 1px dashed #b5b09f;
+  padding-top: 24px;
+  white-space: pre-line;
+}
+
+.signature {
+  text-align: right;
+  font: 19px 'Patrick Hand', cursive;
+  margin-top: 28px;
+  color: #778c3e;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 35px;
+  border-top: 1px solid #c7c1af;
+  padding-top: 18px;
+  font: 9px 'DM Mono', monospace;
+  color: #888778;
+}
+
+.open-button {
+  width: 100%;
+  margin-top: 30px;
+  padding: 17px;
+  background: transparent;
+  border: 1px solid #77786b;
+  color: #eeeade;
+  font: 12px 'DM Mono', monospace;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.open-button:hover {
+  background: #c7f36b;
+  border-color: #c7f36b;
+  color: #171815;
+}
+
+.hidden-message {
+  display: none;
+  color: #c7f36b;
+  text-align: center;
+  font: 19px 'Patrick Hand', cursive;
+  margin-top: 24px;
+  animation: appear .5s ease;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+footer {
+  text-align: center;
+  margin-top: 28px;
+  color: #77786b;
+  font: 9px 'DM Mono', monospace;
+  letter-spacing: 2px;
+}
+
+.confetti {
+  position: fixed;
+  top: -15px;
+  width: 8px;
+  height: 12px;
+  pointer-events: none;
+  animation: fall 3s linear forwards;
+  z-index: 10;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@media(max-width: 420px) {
+  .card { padding: 30px 23px; }
+  .message { font-size: 19px; }
 }
 </style>
 </head>
 
 <body>
-<div class="grain"></div>
 
-<nav>
-  <span>AN UNOFFICIAL INTERNET EVENT</span>
-  <span>03 / NOV</span>
-</nav>
+<div class="background-text">HAPPY BIRTHDAY</div>
 
-<main>
-  <div class="date">TUESDAY, NOVEMBER 03 · SPECIAL EDITION</div>
-
-  <h1>
-    hey,
-    <span>kozel.</span>
-  </h1>
-
-  <div class="intro">
-    So apparently today is the day you level up.
-    <strong>Happy birthday, stranger from the internet.</strong>
-    Didn't know I'd be making a whole webpage for someone I met a few weeks ago, but here we are.
+<div class="wrapper">
+  <div class="topline">
+    <span>AN INTERNET DELIVERY</span>
+    <span>03 NOVEMBER</span>
   </div>
 
-  <hr class="divider">
+  <article class="card">
+    <div class="tape"></div>
 
-  <section class="note">
-    <div class="label">A QUICK NOTE / 001</div>
-    <p>
-      Hope this year brings you good people, ridiculous amounts of luck,
-      unexpected wins, and enough stories to make next year's birthday
-      interesting.
-      <small>— from someone on the other side of the screen</small>
-    </p>
-  </section>
-
-  <hr class="divider">
-
-  <section class="note">
-    <div class="label">OFFICIAL REPORT / 002</div>
-    <p>
-      Birthday status: confirmed.<br>
-      Age: upgraded.<br>
-      Responsibilities: unfortunately still exist.<br>
-      Cake: strongly recommended.
-    </p>
-  </section>
-
-  <section class="interaction">
-    <div class="label">ONE LAST THING</div>
-    <h2>Before you leave...</h2>
-    <p>There's a very important birthday message waiting behind this button.</p>
-    <button onclick="reveal()">open the suspicious button ↗</button>
-    <div id="surprise">
-      HAPPY BIRTHDAY, KOZEL!<br>
-      Don't become boring this year. The internet has enough of those.
-      <br><br>
-      Have a good one :)
+    <div class="card-top">
+      <span>TO: KOZEL</span>
+      <div class="stamp">SPECIAL<br>DELIVERY<br>★ 001</div>
     </div>
-  </section>
-</main>
 
-<footer>
-  <span>MADE ON THE INTERNET</span>
-  
-  <span>NO REFUNDS ON THIS BIRTHDAY</span>
-</footer>
+    <h1>Happy birthday,<br><span>Kozel.</span></h1>
+
+    <div class="subtitle">gande insaan, finally your day.</div>
+
+    <div class="message">Gande insaan, naam to na bataya hai abhi tak, to Kozel hi theek. Hmm.
+
+Maze kariyo aaj aur life mein jo gamble chalte rehte hain na, unhe chalne diyo.
+
+Aur koi na, bandi mil jayegi kabhi na kabhi. Wait kariyo.
+
+Aur bas life mein khush rahiyo. Dekho, dukhi hone ke bahut mauke hain, lekin khush hone ke kam hi hote hain. To khush rahiyo.
+
+And happy birthday one final time!
+
+Party de dena hehe.</div>
+
+    <div class="signature">— your internet acquaintance :)</div>
+
+    <div class="bottom">
+      <span>MADE WITH QUESTIONABLE INTENTIONS</span>
+      <span>✳ 03 / 11</span>
+    </div>
+  </article>
+
+  <button class="open-button" onclick="party()">
+    ONE MORE THING... CLICK HERE ↗
+  </button>
+
+  <div class="hidden-message" id="surprise">
+    Bas ab party ki date bata dena.<br>
+    Birthday tumhara hai, treat humari banti hai kya? :)
+  </div>
+
+  <footer>END OF TRANSMISSION · HAVE A GOOD ONE</footer>
+</div>
 
 <script>
-function reveal() {
-  const message = document.getElementById('surprise');
-  message.style.display = 'block';
+function party() {
+  const surprise = document.getElementById('surprise');
+  surprise.style.display = 'block';
 
-  const button = document.querySelector('button');
-  button.textContent = 'message successfully stolen ✓';
-  button.disabled = true;
+  document.querySelector('.open-button').textContent =
+    'HAPPY BIRTHDAY KOZEL ✓';
+
+  for (let i = 0; i < 65; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.background = ['#c7f36b','#e9e4d5','#b8a4e8','#e6a36a'][Math.floor(Math.random()*4)];
+    piece.style.animationDelay = Math.random() * 1.5 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 4500);
+  }
 }
 </script>
+
 </body>
 </html>
