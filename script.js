@@ -20,11 +20,10 @@ let velocityX = 2;
 let velocityY = 1.5;
 
 let lastTaunt = 0;
-let animationFrame = null;
+let respawning = false;
 
-const MAX_SPEED = 4.8;
-const ACCELERATION = 0.12;
-const WALL_ZONE = 100;
+const MAX_SPEED = 5;
+const ACCELERATION = 0.09;
 
 const taunts = [
   "Too slow.",
@@ -38,8 +37,8 @@ const taunts = [
 
 function getBounds() {
   return {
-    width: Math.max(RADIUS * 2, gameArea.clientWidth),
-    height: Math.max(RADIUS * 2, gameArea.clientHeight)
+    width: Math.max(SIZE, gameArea.clientWidth),
+    height: Math.max(SIZE, gameArea.clientHeight)
   };
 }
 
@@ -47,19 +46,49 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function setupGame() {
+function randomPosition() {
   const bounds = getBounds();
 
-  cakeX = bounds.width * 0.68;
-  cakeY = bounds.height * 0.4;
+  // Spawn away from the spoon so the new cake gets a fair escape.
+  for (let attempt = 0; attempt < 30; attempt++) {
+    const x = RADIUS + Math.random() * (bounds.width - SIZE);
+    const y = RADIUS + Math.random() * (bounds.height - SIZE);
+
+    if (Math.hypot(x - spoonX, y - spoonY) > 110) {
+      return { x, y };
+    }
+  }
+
+  return {
+    x: RADIUS + Math.random() * (bounds.width - SIZE),
+    y: RADIUS + Math.random() * (bounds.height - SIZE)
+  };
+}
+
+function spawnCake() {
+  const position = randomPosition();
+
+  cakeX = position.x;
+  cakeY = position.y;
+
+  const angle = Math.random() * Math.PI * 2;
+
+  velocityX = Math.cos(angle) * MAX_SPEED;
+  velocityY = Math.sin(angle) * MAX_SPEED;
+
+  cake.style.opacity = "1";
+  cake.style.transform = "scale(1)";
+
+  drawPositions();
+}
+
+function setupGame() {
+  const bounds = getBounds();
 
   spoonX = bounds.width * 0.15;
   spoonY = bounds.height * 0.4;
 
-  velocityX = 2;
-  velocityY = 1.5;
-
-  drawPositions();
+  spawnCake();
 }
 
 function drawPositions() {
@@ -92,114 +121,101 @@ function moveSpoon(event) {
 gameArea.addEventListener("pointermove", moveSpoon);
 gameArea.addEventListener("pointerdown", moveSpoon);
 
-function normalize(x, y) {
-  const length = Math.hypot(x, y) || 1;
-
-  return {
-    x: x / length,
-    y: y / length
-  };
+function randomTaunt() {
+  gameStatus.textContent =
+    taunts[Math.floor(Math.random() * taunts.length)];
 }
 
-function getEscapeDirection() {
+function respawnCake() {
+  if (respawning) return;
+
+  respawning = true;
+
+  cake.style.opacity = "0";
+  cake.style.transform = "scale(0.2) rotate(180deg)";
+
+  gameStatus.textContent = "May be you're seeing things...";
+
+  setTimeout(() => {
+    spawnCake();
+
+    gameStatus.textContent = "Haha. Thought you caught it?";
+    respawning = false;
+  }, 450);
+}
+
+function updateCake() {
+  if (respawning) return;
+
   const bounds = getBounds();
 
-  // Direction away from the spoon.
   const dx = cakeX - spoonX;
   const dy = cakeY - spoonY;
 
   const distance = Math.hypot(dx, dy) || 1;
 
+  // Escape from the spoon.
   let directionX = dx / distance;
   let directionY = dy / distance;
 
-  // Wall avoidance. The closer the cake gets to a wall,
-  // the more strongly it turns towards the centre.
-  const left = cakeX;
-  const right = bounds.width - cakeX;
-  const top = cakeY;
-  const bottom = bounds.height - cakeY;
+  // Slight steering towards the centre.
+  const centreX = bounds.width / 2;
+  const centreY = bounds.height / 2;
 
-  const wallStrength = (edgeDistance) => {
-    if (edgeDistance >= WALL_ZONE) return 0;
+  const centreDirectionX = centreX - cakeX;
+  const centreDirectionY = centreY - cakeY;
 
-    return (WALL_ZONE - edgeDistance) / WALL_ZONE;
-  };
+  const centreDistance =
+    Math.hypot(centreDirectionX, centreDirectionY) || 1;
 
-  const leftForce = wallStrength(left);
-  const rightForce = wallStrength(right);
-  const topForce = wallStrength(top);
-  const bottomForce = wallStrength(bottom);
+  directionX += (centreDirectionX / centreDistance) * 0.5;
+  directionY += (centreDirectionY / centreDistance) * 0.5;
 
-  directionX += leftForce * 2;
-  directionX -= rightForce * 2;
+  const length = Math.hypot(directionX, directionY) || 1;
 
-  directionY += topForce * 2;
-  directionY -= bottomForce * 2;
+  directionX /= length;
+  directionY /= length;
 
-  return normalize(directionX, directionY);
-}
+  velocityX +=
+    (directionX * MAX_SPEED - velocityX) * ACCELERATION;
 
-function updateCake() {
-  const bounds = getBounds();
-
-  const direction = getEscapeDirection();
-
-  // The cake smoothly accelerates towards its escape direction.
-  const targetX = direction.x * MAX_SPEED;
-  const targetY = direction.y * MAX_SPEED;
-
-  velocityX += (targetX - velocityX) * ACCELERATION;
-  velocityY += (targetY - velocityY) * ACCELERATION;
+  velocityY +=
+    (directionY * MAX_SPEED - velocityY) * ACCELERATION;
 
   cakeX += velocityX;
   cakeY += velocityY;
 
-  // Hard boundary protection.
-  // This prevents the cake from ever becoming stuck outside the area.
-  if (cakeX < RADIUS) {
-    cakeX = RADIUS;
-    velocityX = Math.abs(velocityX);
+  // If the cake touches ANY wall or corner, it vanishes.
+  const hitWall =
+    cakeX <= RADIUS ||
+    cakeX >= bounds.width - RADIUS ||
+    cakeY <= RADIUS ||
+    cakeY >= bounds.height - RADIUS;
+
+  if (hitWall) {
+    respawnCake();
+    return;
   }
 
-  if (cakeX > bounds.width - RADIUS) {
-    cakeX = bounds.width - RADIUS;
-    velocityX = -Math.abs(velocityX);
-  }
-
-  if (cakeY < RADIUS) {
-    cakeY = RADIUS;
-    velocityY = Math.abs(velocityY);
-  }
-
-  if (cakeY > bounds.height - RADIUS) {
-    cakeY = bounds.height - RADIUS;
-    velocityY = -Math.abs(velocityY);
+  // Funny messages when the spoon gets close.
+  if (distance < 90 && Date.now() - lastTaunt > 2200) {
+    randomTaunt();
+    lastTaunt = Date.now();
   }
 
   drawPositions();
-
-  // Distance-based taunts.
-  const distance = Math.hypot(cakeX - spoonX, cakeY - spoonY);
-
-  if (distance < 85 && Date.now() - lastTaunt > 1800) {
-    gameStatus.textContent =
-      taunts[Math.floor(Math.random() * taunts.length)];
-
-    lastTaunt = Date.now();
-  }
 }
 
 function gameLoop() {
   updateCake();
-  animationFrame = requestAnimationFrame(gameLoop);
+  requestAnimationFrame(gameLoop);
 }
 
-// Start the game.
+// Start game.
 setupGame();
 gameLoop();
 
-// Reposition everything safely when the screen changes size.
+// Keep everything inside the area after resizing.
 window.addEventListener("resize", () => {
   const bounds = getBounds();
 
@@ -222,7 +238,7 @@ partyButton.addEventListener("click", () => {
   createConfetti();
 });
 
-// Confetti effect.
+// Confetti.
 function createConfetti() {
   const symbols = ["✳", "✦", "·", "✧", "✺"];
   const colours = ["#d5c69b", "#a6b596", "#e9e4d6"];
