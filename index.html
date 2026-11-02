@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#171815">
-<title>For Kozel :)</title>
+<title>A birthday thing for Kozel</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=Patrick+Hand&family=Space+Grotesk:wght@400;500;600;700&display=swap');
@@ -124,7 +124,7 @@ h1 span {
 
 .signature {
   text-align: right;
-  font: 22px 'Patrick Hand', cursive;
+  font: 24px 'Patrick Hand', cursive;
   margin-top: 28px;
   color: #778c3e;
 }
@@ -333,11 +333,11 @@ footer {
 <div class="wrapper">
 
   <div class="topline">
-    <span>AN INTERNET DELIVERY</span>
+    <span>A LITTLE BIRTHDAY THING</span>
     <span>03 NOVEMBER</span>
   </div>
 
-  <!-- BIRTHDAY CARD -->
+  <!-- THE BIRTHDAY CARD -->
   <article class="card">
 
     <div class="tape"></div>
@@ -367,7 +367,7 @@ And happy birthday one final time!
 
 Party de dena hehe.</div>
 
-    <div class="signature">— shivam</div>
+    <div class="signature">— Shivam</div>
 
     <div class="bottom">
       <span>MADE WITH QUESTIONABLE INTENTIONS</span>
@@ -376,11 +376,11 @@ Party de dena hehe.</div>
 
   </article>
 
-  <!-- CAKE GAME -->
+  <!-- THE RUNAWAY CAKE GAME -->
   <section class="cake-game">
 
     <div class="game-heading">
-      <span>UNNECESSARY BIRTHDAY GAME / 001</span>
+      <span>BIRTHDAY GAME / 001</span>
       <span>IMPOSSIBLE MODE</span>
     </div>
 
@@ -407,13 +407,13 @@ Party de dena hehe.</div>
 
   </section>
 
-  <!-- PARTY BUTTON -->
+  <!-- THE FINAL SURPRISE -->
   <section class="party-section">
 
     <p>Okay, enough chasing cake.</p>
 
     <button class="party-button" onclick="party()">
-      CLICK FOR YOUR FINAL BIRTHDAY SURPRISE ↗
+      ONE LAST THING... ↗
     </button>
 
     <div id="party-message">
@@ -425,16 +425,14 @@ Party de dena hehe.</div>
   </section>
 
   <footer>
-    END OF TRANSMISSION · HAVE A GOOD ONE
+    THAT'S ALL. NOW GO ENJOY YOUR DAY.
   </footer>
 
 </div>
 
 <script>
 
-// -------------------------------
 // CAKE CHASE GAME
-// -------------------------------
 
 const playground = document.getElementById('playground');
 const cake = document.getElementById('cake');
@@ -449,9 +447,6 @@ let targetY = 150;
 
 let cakeX = 300;
 let cakeY = 100;
-
-let cakeVX = 1.5;
-let cakeVY = 1.2;
 
 let attempts = 0;
 let lastTaunt = 0;
@@ -492,9 +487,6 @@ function resetGame() {
   cakeX = width - 50;
   cakeY = 60;
 
-  cakeVX = 1.5;
-  cakeVY = 1.2;
-
   attempts = 0;
 
   statusText.textContent =
@@ -527,13 +519,13 @@ function animateGame() {
 
   const escapeSpeed = 4.2;
 
-  cakeVX = (awayX / awayDistance) * escapeSpeed;
-  cakeVY = (awayY / awayDistance) * escapeSpeed;
+  let cakeVX = (awayX / awayDistance) * escapeSpeed;
+  let cakeVY = (awayY / awayDistance) * escapeSpeed;
 
   cakeX += cakeVX;
   cakeY += cakeVY;
 
-  // Bounce off the playground walls.
+  // Bounce off walls.
   if (cakeX < 22 || cakeX > width - 22) {
     cakeX = Math.max(22, Math.min(width - 22, cakeX));
   }
@@ -542,7 +534,7 @@ function animateGame() {
     cakeY = Math.max(22, Math.min(height - 22, cakeY));
   }
 
-  // Keep the spoon inside the playground.
+  // Keep spoon inside the playground.
   spoonX = Math.max(16, Math.min(width - 16, spoonX));
   spoonY = Math.max(16, Math.min(height - 16, spoonY));
 
@@ -552,7 +544,7 @@ function animateGame() {
   cake.style.left = cakeX + 'px';
   cake.style.top = cakeY + 'px';
 
-  // Occasional cake taunts.
+  // Cake taunts.
   if (attempts >= 5 && Date.now() - lastTaunt > 5000) {
     statusText.textContent = "The cake says: skill issue.";
     lastTaunt = Date.now();
@@ -561,9 +553,7 @@ function animateGame() {
   requestAnimationFrame(animateGame);
 }
 
-// -------------------------------
 // PARTY SURPRISE
-// -------------------------------
 
 function party() {
 
@@ -574,7 +564,6 @@ function party() {
   document.querySelector('.party-button').textContent =
     'HAPPY BIRTHDAY KOZEL ✓';
 
-  // Confetti celebration.
   for (let i = 0; i < 90; i++) {
 
     const piece = document.createElement('div');
@@ -600,10 +589,9 @@ function party() {
 
     setTimeout(() => piece.remove(), 4500);
   }
-
 }
 
-// Start everything.
+// START GAME
 resetGame();
 animateGame();
 
